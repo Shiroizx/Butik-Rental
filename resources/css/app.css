@@ -1,0 +1,115 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+
+    /* Modern Input Styles */
+    input[type='text'],
+    input[type='email'],
+    input[type='password'],
+    input[type='number'],
+    input[type='date'],
+    input[type='datetime-local'],
+    input[type='search'],
+    input[type='tel'],
+    input[type='url'],
+    select,
+    textarea {
+        @apply mt-1 block w-full rounded-lg border-gray-300 bg-white px-4 py-2.5 text-sm text-deep-charcoal shadow-sm transition-all duration-200 ease-in-out;
+        @apply dark:bg-[#2A2A2B] dark:border-gray-600 dark:text-soft-ivory dark:placeholder-gray-400;
+    }
+
+    /* Hover State */
+    input:hover:not(:disabled),
+    select:hover:not(:disabled),
+    textarea:hover:not(:disabled) {
+        @apply border-metallic-gold dark:border-metallic-gold;
+    }
+
+    /* Focus State - Glow Effect */
+    input:focus,
+    select:focus,
+    textarea:focus {
+        @apply border-metallic-gold outline-none ring-4 ring-metallic-gold/10 dark:ring-metallic-gold/20;
+    }
+
+    /* Disabled State */
+    input:disabled,
+    select:disabled,
+    textarea:disabled {
+        @apply cursor-not-allowed border-dashed border-gray-200 bg-gray-50 text-slate-gray shadow-none;
+        @apply dark:bg-gray-800 dark:border-gray-700 dark:text-gray-500;
+    }
+
+    /* Error State (can be used with class .is-invalid) */
+    .is-invalid {
+        @apply border-red-300 text-red-900 placeholder-red-300 focus:border-red-500 focus:ring-red-500/10;
+        @apply dark:border-red-700 dark:text-red-300 dark:placeholder-red-700;
+    }
+
+    /* Global Body */
+    body {
+        @apply bg-soft-ivory text-deep-charcoal transition-colors duration-300;
+        @apply dark:bg-deep-charcoal dark:text-soft-ivory;
+    }
+
+    /* Common Card/Panel Styles handled globally to avoid editing every file for now */
+    .bg-white {
+        @apply dark:bg-[#1E1E1F] dark:border dark:border-gray-700;
+    }
+
+    .bg-gray-50 {
+        @apply dark:bg-[#181819] dark:border-t dark:border-gray-700;
+    }
+
+    /* Info Boxes */
+    .bg-blue-50 {
+        @apply dark:bg-blue-900/20 dark:border-blue-800;
+    }
+
+    .text-blue-700,
+    .text-blue-800 {
+        @apply dark:text-blue-300;
+    }
+
+    /* Borders */
+    .border-gray-200,
+    .border-gray-300 {
+        @apply dark:border-gray-700;
+    }
+
+    /* Override text colors inside white containers in dark mode if needed */
+    .text-gray-900 {
+        @apply dark:text-soft-ivory;
+    }
+
+    .text-gray-500,
+    .text-gray-600,
+    .text-gray-700 {
+        @apply dark:text-gray-400;
+    }
+
+    .text-gray-800 {
+        @apply dark:text-gray-300;
+    }
+}
+
+/* Custom Scrollbar for better feel */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+}
