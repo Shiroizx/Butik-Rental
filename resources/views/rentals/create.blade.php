@@ -241,37 +241,47 @@
     }
 
     function calculateTotals() {
+        // Calculate duration (days)
+        const tglPinjam = new Date(document.getElementById('tanggal_pinjam').value);
+        const tglKembali = new Date(document.getElementById('tanggal_kembali').value);
+        let duration = 1;
+
+        if (tglPinjam && tglKembali && !isNaN(tglPinjam) && !isNaN(tglKembali)) {
+            const diffTime = tglKembali - tglPinjam;
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
+            duration = diffDays > 0 ? diffDays : 1;
+        }
+
         let totalRental = 0;
         document.querySelectorAll('.price-display').forEach(input => {
             totalRental += parseFloat(input.getAttribute('data-raw-price')) || 0;
         });
 
+        // Apply duration multiplier
+        const grandTotal = totalRental * duration;
+
         // Calculate default deposit (50% min 100k)
-        let defaultDeposit = Math.max(totalRental * 0.5, 100000);
+        let defaultDeposit = Math.max(grandTotal * 0.5, 100000);
         
-        // Update deposit input placeholder and value if not manually edited yet?
-        // Actually, let's just update the value if it's currently 0 or matches the old calculation
-        // Or simpler: Just update it always unless user focuses? Let's just update it.
         const depositInput = document.getElementById('deposit');
         
-        // Only update if user hasn't manually interacted? Hard to track.
-        // Let's update it and let user change it.
-        // If we want to be smarter, we can track 'dirty' state.
-        // For now, let's just update it to guide the user.
         if (!depositInput.dataset.dirty) {
             depositInput.value = defaultDeposit;
         }
 
         const currentDeposit = parseFloat(depositInput.value) || 0;
-        const totalPayment = totalRental + currentDeposit;
+        const totalPayment = grandTotal + currentDeposit;
 
-        document.getElementById('total-payment-display').textContent = 'Rp ' + new Intl.NumberFormat('id-ID').format(totalPayment);
+        document.getElementById('total-payment-display').textContent = 'Rp ' + new Intl.NumberFormat('id-ID').format(totalPayment) + ' (' + duration + ' Hari)';
     }
 
     document.getElementById('deposit').addEventListener('input', function() {
         this.dataset.dirty = "true";
-        calculateTotals(); // Re-calculate total payment (rental + new deposit)
+        calculateTotals(); 
     });
+
+    document.getElementById('tanggal_pinjam').addEventListener('change', calculateTotals);
+    document.getElementById('tanggal_kembali').addEventListener('change', calculateTotals);
 
     // Initial calculation on page load
     document.addEventListener('DOMContentLoaded', function() {

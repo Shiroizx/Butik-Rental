@@ -58,6 +58,14 @@ class RentalController extends Controller
         try {
             $totalBiaya = 0;
             
+            // 1. Calculate Duration
+            $tglPinjam = new \DateTime($request->tanggal_pinjam);
+            $tglKembali = new \DateTime($request->tanggal_kembali);
+            $interval = $tglPinjam->diff($tglKembali);
+            $days = max(1, $interval->days);
+            // If return date is same as borrow date, diff might be 0, so max(1) handles it.
+            // Note: $interval->days returns absolute difference in days.
+
             // 1. Process Items and Calculate Total
             $itemsData = [];
             
@@ -74,13 +82,15 @@ class RentalController extends Controller
 
                 // Get Price
                 $cloth = Cloth::find($item['cloth_id']);
-                $price = $cloth->harga_sewa; 
-                $totalBiaya += $price;
+                $basePrice = $cloth->harga_sewa; 
+                $itemSubtotal = $basePrice * $days;
+                $totalBiaya += $itemSubtotal;
 
                 $itemsData[] = [
                     'size' => $size,
                     'cloth' => $cloth,
-                    'price' => $price
+                    'price' => $basePrice, // Store unit price per day
+                    'subtotal' => $itemSubtotal
                 ];
             }
 
@@ -108,7 +118,7 @@ class RentalController extends Controller
                     'clothes_id' => $itemData['cloth']->id,
                     'clothes_size_id' => $itemData['size']->id,
                     'harga_satuan' => $itemData['price'],
-                    'subtotal' => $itemData['price'], 
+                    'subtotal' => $itemData['subtotal'], 
                     'jumlah' => 1
                 ]);
             }
